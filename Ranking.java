@@ -1,33 +1,45 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
 public class Ranking {
-    private ArrayList<Score> list;
-    private final String RANKING_MESSAGE = "%d 位: %s %d";
-    private final int START_RANK = 1;
+    private List<Integer> pointList;
+    private static final String POINT_RANKING_FORMAT = "%d 位: %d";
+    private List<Score> point_name_List;
+    private static final String POINT_NAME_RANKING_FORMAT = "%d 位: %s %d";
 
     public Ranking() {
-        list = new ArrayList<>();
+        pointList = new ArrayList<>();
+        point_name_List = new ArrayList<>();
     }
 
-    public void EntryScore(int point, String name) {
-        Score score = new Score(point, name);
-        list.add(score);
+    public void EntryScore(int inputScore) {
+        pointList.add(inputScore);
     }
 
-    public void PrintRanking() {
-        Collections.sort(list, new Comparator<Score>() {
-            @Override
-            public int compare(Score scoreFirst, Score scoreSecond) {
-                return Integer.compare(scoreSecond.getPoint(), scoreFirst.getPoint());
-            }
-        });
-        for (int i = 0; i < list.size(); i++) {
-            int rank = START_RANK;
-            Score listElement = list.get(i);
-            System.out.println(String.format(RANKING_MESSAGE, rank, listElement.getName(), listElement.getPoint()));
-            rank++;
+    public void EntryScore(int inputScore, String inputName) {
+        Score score = new Score(inputScore, inputName);
+        point_name_List.add(score);
+    }
+
+    public void printPointRanking() {
+        // スコアを降順にソート
+        Collections.sort(pointList, Collections.reverseOrder());
+
+        // ランキングの出力
+        for (int i = 0; i < pointList.size(); i++) {
+            System.out.println(String.format(POINT_RANKING_FORMAT, i + 1, pointList.get(i)));
         }
+    }
+
+    public void printPoint_NameRanking() {
+        // Score オブジェクトのリストをスコアに基づいて降順にソート
+    Collections.sort(point_name_List, (s1, s2) -> Integer.compare(s2.getPoint(), s1.getPoint()));
+
+    // 名前とスコアのペアのランキングを出力
+    for (int i = 0; i < point_name_List.size(); i++) {
+        Score score = point_name_List.get(i);
+        System.out.println(String.format(POINT_NAME_RANKING_FORMAT, i + 1, score.getName(), score.getPoint()));
+    }
     }
 }
